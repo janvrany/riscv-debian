@@ -5,7 +5,7 @@ wrkdir := $(sdkdir)/work
 bbl := $(wrkdir)/riscv-pk/bbl
 bin := $(wrkdir)/bbl.bin
 
-bbl := freedom-u-sdk
+config := $(realpath riscv-linux-config.txt)
 
 .PHONY: all
 all:  bbl bin
@@ -19,11 +19,11 @@ all:  bbl bin
 bbl:	
 	$(MAKE) -j4 -C $(sdkdir) \
 		linux_srcdir=../riscv-linux \
-		linux_defconfig=$(sdkdir)/conf/linux_distro_defconfig \
+		linux_defconfig=$(config) \
 		bbl
 
 bin:	bbl
 	$(MAKE) -C $(sdkdir) \
 		linux_srcdir=../riscv-linux \
-		linux_defconfig=$(sdkdir)/conf/linux_distro_defconfig \
+		linux_defconfig=$(config) \
 		$(bin)

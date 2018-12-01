@@ -57,6 +57,14 @@ for RISC-V. This includes (somewhat) working GDB!
   ./debian-mk-gdb.sh debian.img    
   ```  
 
+## Run Debian in QEMU
+
+* Execute: 
+
+  ```
+  ./qemu-fire.sh
+  ```
+
 ## Creating SD Card for HiFive Unleashed
 
 Following steps assumes the SD card is properly partioned. If not,
@@ -81,10 +89,12 @@ Now take your SD card, insert it into *Unleashed* and hope for the best.
 * [https://github.com/jim-wilson/riscv-linux-native-gdb/blob/jimw-riscv-linux-gdb/README.md][2]
 * [https://groups.google.com/a/groups.riscv.org/forum/#!msg/sw-dev/jTOOXRXyZoY/BibnmSTOAAAJ][3]
 * [https://wiki.debian.org/InstallingDebianOn/SiFive/HiFiveUnleashed#Building_a_Kernel][4]
+* [https://github.com/sifive/freedom-u-sdk/issues/44][6]
 
 [1]: https://wiki.debian.org/RISC-V
 [2]: https://github.com/jim-wilson/riscv-linux-native-gdb/blob/jimw-riscv-linux-gdb/README.md
 [3]: https://groups.google.com/a/groups.riscv.org/forum/#!msg/sw-dev/jTOOXRXyZoY/BibnmSTOAAAJ
 [4]: https://wiki.debian.org/InstallingDebianOn/SiFive/HiFiveUnleashed#Building_a_Kernel
 [5]: https://github.com/sifive/freedom-u-sdk/blob/master/Makefile#L228
+[6]: https://github.com/sifive/freedom-u-sdk/issues/44
 
