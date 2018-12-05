@@ -67,11 +67,14 @@ function mount_ROOT() {
             sudo mount --bind "/$fs" "${ROOT}/$fs"
         fi        
     done
+    
     # Fix name resolver...
-    if [ -f "${ROOT}/etc/resolv.conf" ]; then
-        sudo cp "${ROOT}/etc/resolv.conf" "${ROOT}/etc/resolv.conf.bak"
+    if [ -d "${ROOT}/etc" ]; then
+        if [ -f "${ROOT}/etc/resolv.conf" ]; then
+            sudo cp "${ROOT}/etc/resolv.conf" "${ROOT}/etc/resolv.conf.bak"
+        fi
+        sudo cp "/etc/resolv.conf" "${ROOT}/etc/resolv.conf"
     fi
-    sudo cp "/etc/resolv.conf" "${ROOT}/etc/resolv.conf"
     
     trap umount_ROOT EXIT
 }

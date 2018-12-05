@@ -2,7 +2,7 @@
 
 set -e
 
-. $(dirname $0)/riscv-debian.inc
+. $(dirname $0)/support.inc
 
 if [ -z "$1" ]; then    
     echo "usage: $(basename $0) <ROOT>"
@@ -11,8 +11,6 @@ fi
 
 ensure_ROOT "$1"
 
-
-# if [ -z 'xxx' ]; then
 
 for fs in proc sys dev/pts dev/shm; do
     if [ -d "${ROOT}/$fs" ]; then
@@ -32,19 +30,19 @@ if [ -d "${ROOT}/lost+found" ]; then
     fi
 fi
 
-# # `mmdebstrap requires destination directory to be empty, check here
-# if [ ! -z "$(ls -A ${ROOT})" ]; then
-#     echo "Root directory is not empty: ${ROOT}"
-#     echo "Please remove all files an retry"
-#     exit 2
-# fi
+# `mmdebstrap requires destination directory to be empty, check here
+if [ ! -z "$(ls -A ${ROOT})" ]; then
+    echo "Root directory is not empty: ${ROOT}"
+    echo "Please remove all files an retry"
+    exit 2
+fi
 
-# sudo mmdebstrap \
-#     --variant=minbase --mode=sudo \
-#     --architectures=riscv64 --include="debian-ports-archive-keyring,pump" \
-#     sid "$ROOT" \
-#     "deb http://deb.debian.org/debian-ports/ sid main" \
-#     "deb http://deb.debian.org/debian-ports/ unreleased main"
+sudo mmdebstrap \
+    --variant=minbase --mode=sudo \
+    --architectures=riscv64 --include="debian-ports-archive-keyring,pump" \
+    sid "$ROOT" \
+    "deb http://deb.debian.org/debian-ports/ sid main" \
+    "deb http://deb.debian.org/debian-ports/ unreleased main"
 
 
 
