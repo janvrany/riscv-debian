@@ -17,6 +17,18 @@ for RISC-V. This includes (somewhat) working GDB!
 
       apt-get install udo apt-get install mmdebstrap/unstable qemu-user-static/unstable binfmt-support/unstable
 
+## Checking out source code
+
+```
+git clone https://github.com/janvrany/riscv-debian.git
+git -C riscv-debian submodule update --init --recursive
+```
+
+*Beware* that the complete checkout will take some time and will require ~8GB of disk space. Once built, the tree would consome
+~16GB of disk space.
+
+
+
 ## Building Linux kernel image
 
 * Run:

@@ -3,9 +3,9 @@
 	url = https://github.com/sifive/freedom-u-sdk.git
 [submodule "riscv-linux"]
 	path = riscv-linux
-	url = https://github.com:janvrany/riscv-linux.git
+	url = https://github.com/janvrany/riscv-linux.git
 	branch = users/jv/riscv-linux-4.15
 [submodule "binutils-gdb"]
 	path = binutils-gdb
-	url = https://janvrany@bitbucket.org/janvrany/binutils-gdb.git
+	url = https://bitbucket.org/janvrany/binutils-gdb.git
 	branch = users/jv/vdb
