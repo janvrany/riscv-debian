@@ -15,21 +15,12 @@ fi
 ensure_ROOT "$1"
 SDCARD_PARTITION_2=$2
 
-for fs in proc sys dev/pts dev/shm; do
-    if [ -d "${ROOT}/$fs" ]; then
-        if mount | grep $(realpath "${ROOT}/$fs") > /dev/null; then
-            sudo umount $(realpath "${ROOT}/$fs")
-        fi
-    fi
-done
-
-
 if ! confirm "Format $SDCARD_PARTITION_2 - all data will be lost"; then
     exit 0
 fi
 
 echo "I: Formatting $SDCARD_PARTITION_2"
-sudo /sbin/mkfs.ext3 "$SDCARD_PARTITION_2"
+sudo /sbin/mkfs.ext4 "$SDCARD_PARTITION_2"
 
 SRC="$ROOT"
 DST=$(mktemp -d)
@@ -39,6 +30,7 @@ sudo mount "$SDCARD_PARTITION_2" "$DST"
 trap "sudo umount $DST" EXIT
 
 echo "I: Copying files from $SRC to $DST"
-sudo rsync -aHAXv "$SRC/" "$DST/"
+sudo rsync -xaHAXv "$SRC/" "$DST/"
 echo "I: Done"
 
+umount_ROOT

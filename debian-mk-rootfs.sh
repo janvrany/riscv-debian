@@ -63,7 +63,7 @@ sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
     tzdata util-linux zlib1g nano wget busybox net-tools ifupdown \
     iputils-ping ntp lynx whiptail dialog ca-certificates less \
     build-essential apt-utils dropbear-run dropbear-bin openssh-client \
-    nfs-client sudo bash-completion tmux
+    nfs-client sudo bash-completion tmux tasksel adduser acl socat git vim
 
 
 sudo chroot "${ROOT}" dpkg --configure -a
