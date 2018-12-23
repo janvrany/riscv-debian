@@ -2,8 +2,8 @@
 sdkdir="$(dirname $0)/freedom-u-sdk"
 wrkdir="${sdkdir}/work"
 
-KERNEL_IMAGE="${wrkdir}/riscv-pk/bbl"
-KERNEL_IMAGE_FOR_UNLEASHED="${wrkdir}/bbl.bin"
+KERNEL_IMAGE="$(dirname $0)/bbl-q-vmlinux-4.19_rv64"
+KERNEL_IMAGE_FOR_UNLEASHED="$(dirname $0)/bbl-u-vmlinux-4.19_rv64"
 
 function confirm ()  {
   echo  -n "$1 [y/n/Ctrl-C]? "

@@ -1,29 +1,40 @@
 #!/usr/bin/make -f
 
-sdkdir := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))freedom-u-sdk
-wrkdir := $(sdkdir)/work
-bbl := $(wrkdir)/riscv-pk/bbl
-bin := $(wrkdir)/bbl.bin
 
-config := $(realpath riscv-linux-config.txt)
+ROOT := $(shell pwd)
 
-.PHONY: all
-all:  bbl bin
-	@echo "To install linux kernel image to SD card, execute:"
-	@echo 
-	@echo "    sudo dd if=$(bin) of=/dev/ABCD bs=4096"
-	@echo 
+ISA ?= rv64imafdc
+ABI ?= lp64d
 
+LINUX=riscv-linux
+LINUX_CONFIG=riscv-linux-config.txt
 
+export CROSS_COMPILE := riscv64-linux-gnu-
 
-bbl:	
-	$(MAKE) -j4 -C $(sdkdir) \
-		linux_srcdir=../riscv-linux \
-		linux_defconfig=$(config) \
-		bbl
+all: bbl
 
-bin:	bbl
-	$(MAKE) -C $(sdkdir) \
-		linux_srcdir=../riscv-linux \
-		linux_defconfig=$(config) \
-		$(bin)
+$(LINUX)/vmlinux: $(LINUX)/.config	
+	$(MAKE) -C $(LINUX) ARCH=riscv vmlinux
+
+$(LINUX)/.config: $(LINUX_CONFIG) $(LINUX)/Makefile		
+	cp $(LINUX_CONFIG) $@
+	$(MAKE) -C $(LINUX) ARCH=riscv olddefconfig
+
+bbl: bbl-q-vmlinux-4.19_rv64 bbl-u-vmlinux-4.19_rv64
+
+bbl-q-vmlinux-4.19_rv64: $(LINUX)/vmlinux
+	rm -f $@
+	rm -rf riscv-pk/build
+	mkdir -p riscv-pk/build
+	cd riscv-pk/build && \
+	../configure \
+	    --prefix=/tmp \
+	    --host=riscv64-linux-gnu \
+	    --with-payload=$(ROOT)/$<
+	CFLAGS="-mabi=$(ABI) -march=$(ISA)" $(MAKE) -C riscv-pk/build
+	mv riscv-pk/build/bbl $@
+
+bbl-u-vmlinux-4.19_rv64: bbl-q-vmlinux-4.19_rv64
+	$(CROSS_COMPILE)objcopy -S -O binary --change-addresses -0x80000000 $< $@
+
+.PHONY: all bbl 

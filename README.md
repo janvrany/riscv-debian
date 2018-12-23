@@ -26,8 +26,8 @@ for RISC-V. This includes (somewhat) working GDB!
   ```
 
   This will leave bootable kernel image (BBL + kernel image) in 
-  `freedom-u-sdk/work/riscv-pk/bbl`. The image for 
-  *HiFive Unleashed* is `freedom-u-sdk/work/bbl.bin`, *other images
+  `bbl-q-vmlinux-4.19_rv64`. The image for 
+  *HiFive Unleashed* is `bbl-u-vmlinux-4.19_rv64`, *other images
   simply won't boot* !!!-
 
 ## Building Debian filesystem image
@@ -68,7 +68,11 @@ for RISC-V. This includes (somewhat) working GDB!
 ## Creating SD Card for HiFive Unleashed
 
 Following steps assumes the SD card is properly partioned. If not,
-please follow steps at the bottom of in [freedom-u-sdk/Makefile][5].
+please follow steps at the bottom of in [freedom-u-sdk/Makefile][5]:
+
+```
+sudo sgdisk --clear --new=1:2048:67583  --change-name=1:bootloader --typecode=1:2E54B353-1271-4842-806F-E436D6AF6985 --largest-new=2 --change-name=2:root  -typecode=2:0FC63DAF-8483-4772-8E79-3D69D8477DE4 -g /dev/mm_some_device
+```
 Then...
 
 * To install kernel on SD card (say `/dev/mmcblk0`)
@@ -90,6 +94,7 @@ Now take your SD card, insert it into *Unleashed* and hope for the best.
 * [https://groups.google.com/a/groups.riscv.org/forum/#!msg/sw-dev/jTOOXRXyZoY/BibnmSTOAAAJ][3]
 * [https://wiki.debian.org/InstallingDebianOn/SiFive/HiFiveUnleashed#Building_a_Kernel][4]
 * [https://github.com/sifive/freedom-u-sdk/issues/44][6]
+* [https://github.com/rwmjones/fedora-riscv-kernel][7]
 
 [1]: https://wiki.debian.org/RISC-V
 [2]: https://github.com/jim-wilson/riscv-linux-native-gdb/blob/jimw-riscv-linux-gdb/README.md
@@ -97,4 +102,5 @@ Now take your SD card, insert it into *Unleashed* and hope for the best.
 [4]: https://wiki.debian.org/InstallingDebianOn/SiFive/HiFiveUnleashed#Building_a_Kernel
 [5]: https://github.com/sifive/freedom-u-sdk/blob/master/Makefile#L228
 [6]: https://github.com/sifive/freedom-u-sdk/issues/44
+[7]: https://github.com/rwmjones/fedora-riscv-kernel
 

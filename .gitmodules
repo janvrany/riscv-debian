@@ -9,3 +9,6 @@
 	path = binutils-gdb
 	url = https://janvrany@bitbucket.org/janvrany/binutils-gdb.git
 	branch = users/jv/vdb
+[submodule "riscv-pk"]
+	path = riscv-pk
+	url = https://github.com/riscv/riscv-pk
