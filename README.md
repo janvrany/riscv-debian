@@ -9,13 +9,13 @@ for RISC-V. This includes (somewhat) working GDB!
 
 * Add Debian Unstable (Sid) repositories to your system
 
-      printf "Package: *\nPin: release a=unstable\nPin-Priority: 1\n" | sudo tee /etc/apt/preferences.d/unstable.pref      
+      printf "Package: *\nPin: release a=unstable\nPin-Priority: 10\n" | sudo tee /etc/apt/preferences.d/unstable.pref      
       printf "deb http://ftp.debian.org/debian unstable main\ndeb-src http://ftp.debian.org/debian unstable main\n" | sudo tee /etc/apt/sources.list.d/unstable.list
       apt-get update
 
 * Install QEMU and `mmdebstrap` (req'd to build root filesystem and run installed system):
 
-      apt-get install udo apt-get install mmdebstrap/unstable qemu-user-static/unstable binfmt-support/unstable
+      apt-get install udo apt-get install mmdebstrap/unstable qemu-user-static/unstable binfmt-support/unstable debian-ports-archive-keyring
 
 ## Checking out source code
 

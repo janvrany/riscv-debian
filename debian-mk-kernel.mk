@@ -17,7 +17,7 @@ all:  bbl bin
 
 
 bbl:	
-	$(MAKE) -j4 -C $(sdkdir) \
+	$(MAKE) -C $(sdkdir) \
 		linux_srcdir=../riscv-linux \
 		linux_defconfig=$(config) \
 		bbl
