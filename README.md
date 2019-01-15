@@ -102,6 +102,9 @@ Now take your SD card, insert it into *Unleashed* and hope for the best.
 * [https://groups.google.com/a/groups.riscv.org/forum/#!msg/sw-dev/jTOOXRXyZoY/BibnmSTOAAAJ][3]
 * [https://wiki.debian.org/InstallingDebianOn/SiFive/HiFiveUnleashed#Building_a_Kernel][4]
 * [https://github.com/sifive/freedom-u-sdk/issues/44][6]
+* [https://github.com/rwmjones/fedora-riscv-kernel][7]
+* [https://github.com/andreas-schwab/linux][8]
+* [https://forums.sifive.com/t/linux-4-20-on-hifive-unleashed/1955][9]
 
 [1]: https://wiki.debian.org/RISC-V
 [2]: https://github.com/jim-wilson/riscv-linux-native-gdb/blob/jimw-riscv-linux-gdb/README.md
@@ -109,4 +112,7 @@ Now take your SD card, insert it into *Unleashed* and hope for the best.
 [4]: https://wiki.debian.org/InstallingDebianOn/SiFive/HiFiveUnleashed#Building_a_Kernel
 [5]: https://github.com/sifive/freedom-u-sdk/blob/master/Makefile#L228
 [6]: https://github.com/sifive/freedom-u-sdk/issues/44
+[7]: https://github.com/rwmjones/fedora-riscv-kernel
+[8]: https://github.com/andreas-schwab/linux
+[9]: https://forums.sifive.com/t/linux-4-20-on-hifive-unleashed/1955
 
