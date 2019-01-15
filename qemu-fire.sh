@@ -10,12 +10,12 @@ if [ -z "$1" ]; then
 fi
 
 DEBIAN_IMAGE=$1
-QEMU="$(realpath ${wrkdir})/riscv-qemu/prefix/bin/qemu-system-riscv64"
+QEMU=$(which qemu-system-riscv64)
 
 if [ ! \( -b "$DEBIAN_IMAGE" -o -f "$DEBIAN_IMAGE" \) ]; then
     echo "E: Invalid DEBIAN_IMAGE (not a block device or file): $DEBIAN_IMAGE"
     exit 1
-fi 
+fi
 
 if [ ! -f "$KERNEL_IMAGE" ]; then
     echo "E: Invalid KERNEL_IMAGE (no such file): $KERNEL_IMAGE"
@@ -24,14 +24,10 @@ if [ ! -f "$KERNEL_IMAGE" ]; then
     exit 2
 fi
 
-if [ ! -x "${QEMU}" ]; then
-    make -j4 -C "$sdkdir" "${QEMU}"
-fi
-
 echo "To (SSH) connect to running Debian, do"
-echo 
+echo
 echo "    ssh localhost -p 5555"
-echo 
+echo
 if ! confirm "Continue"; then
     exit 0
 fi

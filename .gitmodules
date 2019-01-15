@@ -1,11 +1,11 @@
-[submodule "freedom-u-sdk"]
-	path = freedom-u-sdk
-	url = https://github.com/sifive/freedom-u-sdk.git
 [submodule "riscv-linux"]
 	path = riscv-linux
 	url = https://github.com/janvrany/riscv-linux.git
-	branch = users/jv/riscv-linux-4.15
+	branch = users/jv/riscv-linux-5.0-rc1
 [submodule "binutils-gdb"]
 	path = binutils-gdb
 	url = https://bitbucket.org/janvrany/binutils-gdb.git
 	branch = users/jv/vdb
+[submodule "riscv-pk"]
+	path = riscv-pk
+	url = https://github.com/riscv/riscv-pk.git
