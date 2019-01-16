@@ -2,12 +2,12 @@
 
 *Work in progress!*
 
-A set of scripts to build a (somewhat) working Debian image 
-for RISC-V. This includes (somewhat) working GDB! 
+A set of scripts to build a (somewhat) working Debian image for RISC-V. This 
+includes (somewhat) working GDB! 
 
 ## Setting up host build environment
 
-* Add Debian Unstable (Sid) repositories to your system
+* Add Debian Unstable (Sid) repositories to your system:
 
       printf "Package: *\nPin: release a=unstable\nPin-Priority: 10\n" | sudo tee /etc/apt/preferences.d/unstable.pref      
       printf "deb http://ftp.debian.org/debian unstable main\ndeb-src http://ftp.debian.org/debian unstable main\n" | sudo tee /etc/apt/sources.list.d/unstable.list
@@ -15,7 +15,7 @@ for RISC-V. This includes (somewhat) working GDB!
 
 * Install QEMU and `mmdebstrap` (req'd to build root filesystem and run installed system):
 
-      apt-get install udo apt-get install mmdebstrap/unstable qemu-user-static/unstable binfmt-support/unstable debian-ports-archive-keyring
+      apt-get install udo apt-get install mmdebstrap/unstable qemu-user-static/unstable qemu-system-riscv64/unstable binfmt-support/unstable debian-ports-archive-keyring gcc-riscv64-linux-gnu rsync
 
 ## Checking out source code
 
@@ -24,10 +24,12 @@ git clone https://github.com/janvrany/riscv-debian.git
 git -C riscv-debian submodule update --init --recursive
 ```
 
-*Beware* that the complete checkout will take some time and will require ~8GB of disk space. Once built, the tree would consome
-~16GB of disk space.
+## !!! BIG FAT WARNING !!!
 
+Scripts below do use sudo quite a lot. *IF THERE"S A BUG, IT MAY WIPE OUT 
+YOUR SYSTEM*. *DO NOT RUN THESE SCRIPTS WITHOUT READING THEM CAREFULLY FIRST*. 
 
+They're provided for convenience. Use at your own risk.
 
 ## Building Linux kernel image
 
@@ -37,16 +39,14 @@ git -C riscv-debian submodule update --init --recursive
   ./debian-mk-kernel.mk
   ```
 
-  This will leave bootable kernel image (BBL + kernel image) in 
-  `freedom-u-sdk/work/riscv-pk/bbl`. The image for 
-  *HiFive Unleashed* is `freedom-u-sdk/work/bbl.bin`, *other images
-  simply won't boot* !!!-
+  This will leave QEMU bootable kernel image (BBL + kernel image) in 
+  `bbl-q`. The image for *HiFive Unleashed* is `bbl-u`, *QEMU image
+  simply won't boot* !!!
 
 ## Building Debian filesystem image
 
 * Create a file containing Debian root filesystem. This is optional,
-  you may use directly a device (say `/dev/mmcblk0p2`) or ZFS zvolume (`/dev/zvol/...`). You will need at least 4GB of space,
-  preferably more. To make plain file image: 
+  you may use directly a device (say `/dev/mmcblk0p2`) or ZFS zvolume (`/dev/zvol/...`). You will need at least 4GB of space, preferably more. To make plain file image: 
 
   ```
   truncate -s 4G debian.img
@@ -61,13 +61,18 @@ git -C riscv-debian submodule update --init --recursive
   ```
 
   Please note, that Rebian repository for RISC-V arch is really
-  shaky, at times `apt-get` may fail because unsatisfiable dependencies. In that case, either wait or fiddle about 
+  shaky, at times `apt-get` may fail because unsatisfiable dependencies. In that case, either wait or fiddle about somehow.
 
 * Install GDB:
 
   ```
   ./debian-mk-gdb.sh debian.img    
   ```  
+
+  Note, that this may (will) take a lot, lot of time when using QEMU. If you 
+  intend to use Debian on real hardware, e.g., *HiFive Unleashed*, you may
+  want to compile GDB manually there. To do so,  follow the steps in 
+  `./debian-mk-gdb.sh` script. 
 
 ## Run Debian in QEMU
 
