@@ -1,7 +1,4 @@
 
-sdkdir="$(dirname $0)/freedom-u-sdk"
-wrkdir="${sdkdir}/work"
-
 KERNEL_IMAGE="$(dirname $0)/bbl-q"
 KERNEL_IMAGE_FOR_UNLEASHED="$(dirname $0)/bbl-u"
 
