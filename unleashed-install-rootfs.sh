@@ -33,4 +33,14 @@ echo "I: Copying files from $SRC to $DST"
 sudo rsync -xaHAXv "$SRC/" "$DST/"
 echo "I: Done"
 
+# See https://forums.sifive.com/t/linux-4-20-on-hifive-unleashed/1955
+echo "I: Fixing eth0 ring buffer sizes"
+echo "	up sleep 5; ethtool -G eth0 rx 8192; ethtool -G eth0 tx 4096" | sudo tee -a "${DST}/etc/network/interfaces"
+
+echo "I: Use tmpfs for /tmp"
+echo "tmpfs   /tmp    tmpfs   defaults        0       0"  | sudo tee -a "${DST}/etc/fstab"
+
+echo "I: Setting hostname to 'unleashed'"
+echo "unleashed" | sudo tee -a "${DST}/etc/hostname"
+
 umount_ROOT
