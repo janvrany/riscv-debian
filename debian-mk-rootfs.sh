@@ -44,7 +44,8 @@ sudo mmdebstrap \
     "deb http://deb.debian.org/debian-ports/ sid main" \
     "deb http://deb.debian.org/debian-ports/ unreleased main"
 
-
+printf "Package: *\nPin: release a=experimental\nPin-Priority: 5\n" | sudo tee "${ROOT}/etc/apt/preferences.d/experimental.pref"
+printf "deb http://deb.debian.org/debian-ports/ experimental main" | sudo tee "${ROOT}/etc/apt/sources.list.d/experimental.list"
 
 sudo chroot "${ROOT}" /usr/bin/apt-get update
 sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
@@ -63,16 +64,25 @@ sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
     tzdata util-linux zlib1g nano wget busybox net-tools ifupdown \
     iputils-ping ntp lynx whiptail dialog ca-certificates less \
     build-essential apt-utils dropbear-run dropbear-bin openssh-client \
-    nfs-client sudo bash-completion tmux tasksel adduser acl socat git vim
+    nfs-client sudo bash-completion tmux adduser acl socat git vim ethtool \
+    texinfo python3-dev flex bison libexpat1-dev libncurses-dev gawk \
+    libncurses5-dev libncursesw5-dev procps
 
 
 sudo chroot "${ROOT}" dpkg --configure -a
 
 
 sudo sh -c "cat >${ROOT}/etc/fstab <<EOF
-proc    /proc   proc    defaults        0       0
-sysfs   /sys    sysfs   defaults,nofail 0       0
-devpts  /dev/pts        devpts  defaults,nofail 0       0
+proc                /proc       proc    defaults            0       0
+sysfs               /sys        sysfs   defaults,nofail     0       0
+devpts              /dev/pts    devpts  defaults,nofail     0       0
+
+#
+# Uncomment and edit line below to mount home over NFS
+#
+#server:/export     /home       nfs4    noatime,async       0       0
+
+
 EOF
 "
 
@@ -102,4 +112,10 @@ sudo chroot "${ROOT}" useradd --uid $(id --user) $USER
 
 echo "Enter password for user '$USER':"
 sudo chroot "${ROOT}" /usr/bin/passwd $USER
+sudo chroot "${ROOT}" /usr/bin/chsh -s /bin/bash $USER
+sudo sh -c "cat >${ROOT}/etc/sudoers.d/$USER <<EOF
+${USER}     ALL=(ALL:ALL) ALL
+EOF
+"
+
 
