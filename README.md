@@ -39,14 +39,15 @@ They're provided for convenience. Use at your own risk.
   ./debian-mk-kernel.mk
   ```
 
-  This will leave QEMU bootable kernel image (BBL + kernel image) in 
+  This will leave QEMU bootable kernel image (BBL + kernel image) in
   `bbl-q`. The image for *HiFive Unleashed* is `bbl-u`, *QEMU image
   simply won't boot* !!!
 
 ## Building Debian filesystem image
 
 * Create a file containing Debian root filesystem. This is optional,
-  you may use directly a device (say `/dev/mmcblk0p2`) or ZFS zvolume (`/dev/zvol/...`). You will need at least 4GB of space, preferably more. To make plain file image: 
+  you may use directly a device (say `/dev/mmcblk0p2`) or ZFS zvolume (`/dev/zvol/...`).
+  You will need at least 4GB of space, preferably more. To make plain file image:
 
   ```
   truncate -s 4G debian.img
@@ -56,7 +57,7 @@ They're provided for convenience. Use at your own risk.
 * Install Debian into that image:
 
   ```
-  ./debian-mk-rootfs.sh debian.img  
+  ./debian-mk-rootfs.sh debian.img
 
   ```
 
@@ -66,17 +67,17 @@ They're provided for convenience. Use at your own risk.
 * Install GDB:
 
   ```
-  ./debian-mk-gdb.sh debian.img    
-  ```  
+  ./debian-mk-gdb.sh debian.img
+  ```
 
-  Note, that this may (will) take a lot, lot of time when using QEMU. If you 
+  Note, that this may (will) take a lot, lot of time when using QEMU. If you
   intend to use Debian on real hardware, e.g., *HiFive Unleashed*, you may
-  want to compile GDB manually there. To do so,  follow the steps in 
-  `./debian-mk-gdb.sh` script. 
+  want to compile GDB manually there. To do so,  follow the steps in
+  `./debian-mk-gdb.sh` script.
 
 ## Run Debian in QEMU
 
-* Execute: 
+* Execute:
 
   ```
   ./qemu-fire.sh
@@ -95,11 +96,76 @@ Then...
   ```
 
 * To install Debian root filesystem on SD card (say `/dev/mmcblk0`)
- 
+
   ```
   ./unleashed-install-rootfs.sh debian.img /dev/mmcblk0p2
   ```
 Now take your SD card, insert it into *Unleashed* and hope for the best. 
+
+You can connect to *Unleashed* serial console by using `screen`:
+```
+sudo screen /dev/ttyUSBS1 115200
+```
+
+## Other comments
+
+### Upgrading from sysv init to `systemd`
+
+Older versions if this scripts used good old sysv init scripts. While this
+is still possible, quite a lot of packages would like to pull in `systemd` and
+replace sysv init. These scripts now install `systemd` by default.
+
+To upgrade system with sysv init, you need to do following:
+
+ * Compile and install new kernel (as `systemd` requires features not enabled
+   in previous kernel configurations)
+
+ * Boot with old sysv init and update the system:
+
+   ```
+   sudo apt update
+   sudo apt upgrade
+   ```
+
+ * In `/etc/network/interfaces` change line from:
+
+   ```
+   allow-hotplug eth0
+   ```
+
+   to:
+
+   ```
+   auto eth0
+   ```
+
+ * Install `systemd` but *DO NOT REBOOT*, not yet:
+
+   ```
+   sudo apt install systemd
+   ```
+
+ * Enable `getty` on `/dev/console` and disable `getty`s on `/dev/ttyS0` and `/dev/hvc0`:
+
+   ```
+   systemctl mask serial-getty@ttyS0.service
+   systemctl mask serial-getty@hvc0.service
+   systemctl unmask console-getty.service
+   systemctl enable console-getty.service
+
+   ```
+
+ * Now reboot and hope for the best...
+
+### How to fix missing `/var/lib/dpkg/available`
+
+Sometimes it happened to me that `/var/lib/dpkg/available` disappeared.
+This prevents `dpkg` / `apt` from removing packages. Following command
+fixed this for me:
+
+```
+sudo dpkg --clear-avail && sudo apt-get update
+```
 
 ## References
 * [https://wiki.debian.org/RISC-V][1]
@@ -110,6 +176,7 @@ Now take your SD card, insert it into *Unleashed* and hope for the best.
 * [https://github.com/rwmjones/fedora-riscv-kernel][7]
 * [https://github.com/andreas-schwab/linux][8]
 * [https://forums.sifive.com/t/linux-4-20-on-hifive-unleashed/1955][9]
+* [SiFive HiFive Unleashed Getting Started Guide][10]
 
 [1]: https://wiki.debian.org/RISC-V
 [2]: https://github.com/jim-wilson/riscv-linux-native-gdb/blob/jimw-riscv-linux-gdb/README.md
@@ -120,4 +187,5 @@ Now take your SD card, insert it into *Unleashed* and hope for the best.
 [7]: https://github.com/rwmjones/fedora-riscv-kernel
 [8]: https://github.com/andreas-schwab/linux
 [9]: https://forums.sifive.com/t/linux-4-20-on-hifive-unleashed/1955
+[10]: https://sifive.cdn.prismic.io/sifive%2Ffa3a584a-a02f-4fda-b758-a2def05f49f9_hifive-unleashed-getting-started-guide-v1p1.pdf
 

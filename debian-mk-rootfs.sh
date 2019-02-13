@@ -4,7 +4,7 @@ set -e
 
 . $(dirname $0)/support.inc
 
-if [ -z "$1" ]; then    
+if [ -z "$1" ]; then
     echo "usage: $(basename $0) <ROOT>"
     exit 1
 fi
@@ -60,7 +60,7 @@ sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
     libpam-modules-bin libpam-runtime libpam0g libpcre3 libselinux1 \
     libsemanage-common libsemanage1 libsepol1 libsmartcols1 libss2 libstdc++6 \
     libsystemd0 libtasn1-6 libtinfo5 libudev1 libunistring2 libuuid1 login mawk \
-    mount ncurses-base ncurses-bin passwd perl-base sed sysvinit-core sysvinit-utils tar \
+    mount ncurses-base ncurses-bin passwd perl-base sed systemd tar \
     tzdata util-linux zlib1g nano wget busybox net-tools ifupdown \
     iputils-ping ntp lynx whiptail dialog ca-certificates less \
     build-essential apt-utils dropbear-run dropbear-bin openssh-client \
@@ -91,17 +91,18 @@ source-directory /etc/network/interfaces.d
 auto lo
 iface lo inet loopback
 
-allow-hotplug eth0
+auto eth0
 iface eth0 inet dhcp
 EOF
 "
 
-sudo sh -c "echo \"con:23:respawn:/sbin/getty -L console 115200 vt102\" >> \"${ROOT}/etc/inittab\""
-sudo sed -i -e  's/^\([1-6].*tty[1-6]\)$/# \1/g' "${ROOT}/etc/inittab"
+sudo chroot "${ROOT}" systemctl mask serial-getty@ttyS0.service
+sudo chroot "${ROOT}" systemctl mask serial-getty@hvc0.service
+sudo chroot "${ROOT}" systemctl unmask console-getty.service
+sudo chroot "${ROOT}" systemctl enable console-getty.service
 
 sudo sh -c "echo \"debian-sid-rv64\" > \"${ROOT}/etc/hostname\""
 
-sudo chroot "${ROOT}" update-rc.d checkroot.sh enable S
 sudo chroot "${ROOT}" apt autoremove
 
 echo "Enter password for user 'root', i.e, \"sifive\" (no quotes):"
