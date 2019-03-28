@@ -15,7 +15,7 @@ includes (somewhat) working GDB!
 
 * Install QEMU and `mmdebstrap` (req'd to build root filesystem and run installed system):
 
-      apt-get install udo apt-get install mmdebstrap/unstable qemu-user-static/unstable qemu-system-riscv64/unstable binfmt-support/unstable debian-ports-archive-keyring gcc-riscv64-linux-gnu rsync
+      sudo apt-get install mmdebstrap/unstable qemu-user-static/unstable qemu-system-riscv64/unstable binfmt-support/unstable debian-ports-archive-keyring gcc-riscv64-linux-gnu rsync
 
 ## Checking out source code
 
