@@ -1,9 +1,7 @@
 # Debian on RISC-V
 
-*Work in progress!*
-
-A set of scripts to build a (somewhat) working Debian image for RISC-V. This 
-includes (somewhat) working GDB! 
+A set of scripts to build a working Debian image for RISC-V. This  includes
+usable GDB!
 
 ## Setting up host build environment
 
@@ -16,6 +14,9 @@ includes (somewhat) working GDB!
 * Install QEMU and `mmdebstrap` (req'd to build root filesystem and run installed system):
 
       sudo apt-get install mmdebstrap/unstable qemu-user-static/unstable qemu-system-riscv64/unstable binfmt-support/unstable debian-ports-archive-keyring gcc-riscv64-linux-gnu rsync
+
+*Note:* If you have some other Debian-based distro, e.g, Ubuntu, this recipe may
+or may not work! Tested only on Debian Buster.
 
 ## Checking out source code
 
@@ -31,7 +32,9 @@ YOUR SYSTEM*. *DO NOT RUN THESE SCRIPTS WITHOUT READING THEM CAREFULLY FIRST*.
 
 They're provided for convenience. Use at your own risk.
 
-## Building Linux kernel image
+## Creating RISC-V Debian Image
+
+### 1. Building Linux kernel image
 
 * Run:
 
@@ -39,18 +42,21 @@ They're provided for convenience. Use at your own risk.
   ./debian-mk-kernel.mk
   ```
 
-  This will leave QEMU bootable kernel image (BBL + kernel image) in
-  `bbl-q`. The image for *HiFive Unleashed* is `bbl-u`, *QEMU image
-  simply won't boot* !!!
+  This will leave QEMU bootable kernel image (BBL + kernel image) in `bbl-q`.
+  The image for *HiFive Unleashed* is `bbl-u`, *QEMU image simply won't boot*
+  !!!
 
-## Building Debian filesystem image
+### 2. Building Debian filesystem image
 
-* Create a file containing Debian root filesystem. This is optional,
-  you may use directly a device (say `/dev/mmcblk0p2`) or ZFS zvolume (`/dev/zvol/...`).
-  You will need at least 4GB of space, preferably more. To make plain file image:
+* Create a file containing Debian root filesystem. This is optional, you may use
+  directly a device (say `/dev/mmcblk0p2`) or ZFS zvolume (`/dev/zvol/...`). You
+  will need at least 4GB of space but for development, use 8G (or more). C++
+  object files with full debug info can be pretty big.
+
+  To make plain file image:
 
   ```
-  truncate -s 4G debian.img
+  truncate -s 8G debian.img
   /sbin/mkfs.ext3 debian.img
   ```
 
@@ -61,29 +67,40 @@ They're provided for convenience. Use at your own risk.
 
   ```
 
-  Please note, that Rebian repository for RISC-V arch is really
-  shaky, at times `apt-get` may fail because unsatisfiable dependencies. In that case, either wait or fiddle about somehow.
+  Please note, that Rebian repository for RISC-V arch is really shaky, at times
+  `apt-get` may fail because unsatisfiable dependencies. In that case, either
+  wait or fiddle about somehow.
 
-* Install GDB:
+### 3. Install GDB (optional)
 
-  ```
-  ./debian-mk-gdb.sh debian.img
-  ```
+You may want to install GDB in order to debug programs. At the time of writing,
+the stock GDB had problems. To install GDB that is known to work, run
 
-  Note, that this may (will) take a lot, lot of time when using QEMU. If you
-  intend to use Debian on real hardware, e.g., *HiFive Unleashed*, you may
-  want to compile GDB manually there. To do so,  follow the steps in
-  `./debian-mk-gdb.sh` script.
 
-## Run Debian in QEMU
+```
+./debian-mk-gdb.sh debian.img
+```
 
-* Execute:
+Note, that this may (will) take a lot, lot of time when using QEMU. If you
+intend to use Debian on real hardware, e.g., *HiFive Unleashed*, you may want to
+compile GDB manually there. To do so, follow the steps in `./debian-mk-gdb.sh`
+script.
 
-  ```
-  ./qemu-fire.sh
-  ```
+### 4. Install Jenkins build slave support (optional)
 
-## Creating SD Card for HiFive Unleashed
+If you want to run RISC-V [Jenkins][11] build slave, run
+
+```
+./debian-mk-gdb.sh debian.img /path/to/jenkins.id_rsa.pub
+```
+
+You need to provide a path to *PUBLIC* SSH RSA key that Jenkins master would use
+to connect to the slave.
+
+On Jenkins master, use [SSH][12] to connect to the slave, username is `jenkins` and use
+the corresponding key.
+
+### 5. Creating SD Card for HiFive Unleashed (optional)
 
 Following steps assumes the SD card is properly partioned. If not,
 please follow steps at the bottom of in [freedom-u-sdk/Makefile][5].
@@ -100,62 +117,20 @@ Then...
   ```
   ./unleashed-install-rootfs.sh debian.img /dev/mmcblk0p2
   ```
-Now take your SD card, insert it into *Unleashed* and hope for the best. 
+Now take your SD card, insert it into *Unleashed* and hope for the best.
 
 You can connect to *Unleashed* serial console by using `screen`:
 ```
 sudo screen /dev/ttyUSBS1 115200
 ```
 
+## Run RISC-V Debian Image in QEMU
+
+```
+./qemu-fire.sh
+```
+
 ## Other comments
-
-### Upgrading from sysv init to `systemd`
-
-Older versions if this scripts used good old sysv init scripts. While this
-is still possible, quite a lot of packages would like to pull in `systemd` and
-replace sysv init. These scripts now install `systemd` by default.
-
-To upgrade system with sysv init, you need to do following:
-
- * Compile and install new kernel (as `systemd` requires features not enabled
-   in previous kernel configurations)
-
- * Boot with old sysv init and update the system:
-
-   ```
-   sudo apt update
-   sudo apt upgrade
-   ```
-
- * In `/etc/network/interfaces` change line from:
-
-   ```
-   allow-hotplug eth0
-   ```
-
-   to:
-
-   ```
-   auto eth0
-   ```
-
- * Install `systemd` but *DO NOT REBOOT*, not yet:
-
-   ```
-   sudo apt install systemd
-   ```
-
- * Enable `getty` on `/dev/console` and disable `getty`s on `/dev/ttyS0` and `/dev/hvc0`:
-
-   ```
-   systemctl mask serial-getty@ttyS0.service
-   systemctl mask serial-getty@hvc0.service
-   systemctl unmask console-getty.service
-   systemctl enable console-getty.service
-
-   ```
-
- * Now reboot and hope for the best...
 
 ### How to fix missing `/var/lib/dpkg/available`
 
@@ -188,4 +163,6 @@ sudo dpkg --clear-avail && sudo apt-get update
 [8]: https://github.com/andreas-schwab/linux
 [9]: https://forums.sifive.com/t/linux-4-20-on-hifive-unleashed/1955
 [10]: https://sifive.cdn.prismic.io/sifive%2Ffa3a584a-a02f-4fda-b758-a2def05f49f9_hifive-unleashed-getting-started-guide-v1p1.pdf
+[11]: https://jenkins.io/
+[12]: https://wiki.jenkins.io/display/JENKINS/SSH+Slaves+plugin
 
