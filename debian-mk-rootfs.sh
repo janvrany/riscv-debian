@@ -11,7 +11,9 @@ fi
 
 ensure_ROOT "$1"
 
-
+# ensure_ROOT mount /proc, /sys, /dev/pts and /dev/shm in order to allow
+# for easy chroot. However,`mmdebstrap` requires destination directory to
+# be empty so umount them (if mounted)
 for fs in proc sys dev/pts dev/shm; do
     if [ -d "${ROOT}/$fs" ]; then
         if mount | grep $(realpath "${ROOT}/$fs") > /dev/null; then
@@ -109,7 +111,7 @@ echo "Enter password for user 'root', i.e, \"sifive\" (no quotes):"
 sudo chroot "${ROOT}" /usr/bin/passwd root
 
 echo "Creating user $USER..."
-sudo chroot "${ROOT}" useradd --uid $(id --user) $USER
+sudo chroot "${ROOT}" useradd --create-home --uid $(id --user) $USER
 
 echo "Enter password for user '$USER':"
 sudo chroot "${ROOT}" /usr/bin/passwd $USER
