@@ -68,8 +68,7 @@ sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
     build-essential apt-utils dropbear-run dropbear-bin openssh-client \
     nfs-client sudo bash-completion tmux adduser acl socat git vim ethtool \
     texinfo python3-dev flex bison libexpat1-dev libncurses-dev gawk \
-    libncurses5-dev libncursesw5-dev procps
-
+    libncurses5-dev libncursesw5-dev procps cmake libdwarf-dev libelf-dev
 
 sudo chroot "${ROOT}" dpkg --configure -a
 
@@ -107,6 +106,11 @@ sudo sh -c "echo \"debian-sid-rv64\" > \"${ROOT}/etc/hostname\""
 
 sudo chroot "${ROOT}" apt autoremove
 
+# Download and install riscv.h and riscv-opc.h - these are needed for
+# OMR RISC-V port and for Smalltalk/X
+sudo wget "-O${ROOT}/usr/local/include/riscv.h" 'https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=blob_plain;f=include/opcode/riscv.h;hb=HEAD'
+sudo wget "-O${ROOT}/usr/local/include/riscv-opc.h" 'https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=blob_plain;f=include/opcode/riscv-opc.h;hb=HEAD'
+
 echo "Enter password for user 'root', i.e, \"sifive\" (no quotes):"
 sudo chroot "${ROOT}" /usr/bin/passwd root
 
@@ -120,5 +124,4 @@ sudo sh -c "cat >${ROOT}/etc/sudoers.d/$USER <<EOF
 ${USER}     ALL=(ALL:ALL) ALL
 EOF
 "
-
 
