@@ -111,6 +111,9 @@ sudo chroot "${ROOT}" apt autoremove
 sudo wget "-O${ROOT}/usr/local/include/riscv.h" 'https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=blob_plain;f=include/opcode/riscv.h;hb=HEAD'
 sudo wget "-O${ROOT}/usr/local/include/riscv-opc.h" 'https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=blob_plain;f=include/opcode/riscv-opc.h;hb=HEAD'
 
+# This is workaround for CMake-based cross compilation
+(cd "${ROOT}/usr/lib/riscv64-linux-gnu" && sudo ln -s ../../../lib/riscv64-linux-gnu/libz.so.1 .)
+
 echo "Enter password for user 'root', i.e, \"sifive\" (no quotes):"
 sudo chroot "${ROOT}" /usr/bin/passwd root
 
