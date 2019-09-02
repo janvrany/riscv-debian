@@ -13,7 +13,7 @@ usable GDB!
 
 * Install QEMU and `mmdebstrap` (req'd to build root filesystem and run installed system):
 
-      sudo apt-get install mmdebstrap/unstable qemu-user-static/unstable qemu-system-riscv64/unstable binfmt-support/unstable debian-ports-archive-keyring gcc-riscv64-linux-gnu rsync
+      sudo apt-get install mmdebstrap qemu-user-static qemu-system-misc binfmt-support debian-ports-archive-keyring gcc-riscv64-linux-gnu rsync
 
 *Note:* If you have some other Debian-based distro, e.g, Ubuntu, this recipe may
 or may not work! Tested only on Debian Buster.
