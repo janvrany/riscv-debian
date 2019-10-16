@@ -41,7 +41,7 @@ fi
 
 sudo mmdebstrap \
     --variant=minbase --mode=sudo \
-    --architectures=riscv64 --include="debian-ports-archive-keyring,pump" \
+    --architectures=riscv64 --include="debian-ports-archive-keyring" \
     sid "$ROOT" \
     "deb http://deb.debian.org/debian-ports/ sid main" \
     "deb http://deb.debian.org/debian-ports/ unreleased main"
@@ -51,6 +51,7 @@ printf "deb http://deb.debian.org/debian-ports/ experimental main" | sudo tee "$
 
 sudo chroot "${ROOT}" /usr/bin/apt-get update
 sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
+    isc-dhcp-client \
     adduser apt base-files base-passwd bash bsdutils coreutils dash debconf \
     debian-archive-keyring debian-ports-archive-keyring debianutils diffutils \
     dpkg e2fsprogs fdisk findutils gcc-8-base gpgv grep gzip hostname \
