@@ -102,11 +102,20 @@ the corresponding key.
 
 ### 5. Creating SD Card for HiFive Unleashed (optional)
 
-Following steps assumes the SD card is properly partioned. If not,
-please follow steps at the bottom of in [freedom-u-sdk/Makefile][5].
-Then...
+Following steps assumes the SD card (say `/dev/mmcblk0`) is properly partioned. 
+If not, please follow steps at the bottom of in [freedom-u-sdk/Makefile][5]. 
+In short:
 
-* To install kernel on SD card (say `/dev/mmcblk0`)
+```
+sgdisk --clear                                                                                            \
+       --new=1:2048:67583  --change-name=1:bootloader --typecode=1:2E54B353-1271-4842-806F-E436D6AF6985   \
+       --new=2:264192:     --change-name=2:root       --typecode=2:0FC63DAF-8483-4772-8E79-3D69D8477DE4   \
+       /dev/mmcblk0
+```
+
+Then:
+
+* To install kernel on SD card:
 
   ```
   ./unleashed-install-kernel.sh /dev/mmcblk0p1
@@ -157,7 +166,7 @@ sudo dpkg --clear-avail && sudo apt-get update
 [2]: https://github.com/jim-wilson/riscv-linux-native-gdb/blob/jimw-riscv-linux-gdb/README.md
 [3]: https://groups.google.com/a/groups.riscv.org/forum/#!msg/sw-dev/jTOOXRXyZoY/BibnmSTOAAAJ
 [4]: https://wiki.debian.org/InstallingDebianOn/SiFive/HiFiveUnleashed#Building_a_Kernel
-[5]: https://github.com/sifive/freedom-u-sdk/blob/master/Makefile#L228
+[5]: https://github.com/sifive/freedom-u-sdk/blob/a938cf74b958cee13bdd2f9c9945297f744a2109/Makefile#L228
 [6]: https://github.com/sifive/freedom-u-sdk/issues/44
 [7]: https://github.com/rwmjones/fedora-riscv-kernel
 [8]: https://github.com/andreas-schwab/linux
