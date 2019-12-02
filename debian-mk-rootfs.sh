@@ -66,10 +66,17 @@ sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
     mount ncurses-base ncurses-bin passwd perl-base sed systemd tar \
     tzdata util-linux zlib1g nano wget busybox net-tools ifupdown \
     iputils-ping ntp lynx whiptail dialog ca-certificates less \
-    build-essential apt-utils dropbear-run dropbear-bin openssh-client \
+    build-essential apt-utils openssh-server openssh-client \
     nfs-client sudo bash-completion tmux adduser acl socat git vim ethtool \
     texinfo python3-dev flex bison libexpat1-dev libncurses-dev gawk \
-    libncurses5-dev libncursesw5-dev procps cmake libdwarf-dev libelf-dev
+    libncurses5-dev libncursesw5-dev procps
+
+# Following are needed for OMR / OpenJ9
+sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
+    cmake \
+    libdwarf-dev libelf-dev \
+    libx11-dev libxext-dev libxrender-dev libxrandr-dev libxtst-dev libxt-dev \
+    libasound2-dev
 
 sudo chroot "${ROOT}" dpkg --configure -a
 
