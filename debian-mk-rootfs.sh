@@ -51,21 +51,14 @@ printf "deb http://deb.debian.org/debian-ports/ experimental main" | sudo tee "$
 
 sudo chroot "${ROOT}" /usr/bin/apt-get update
 sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
-    isc-dhcp-client \
-    adduser apt base-files base-passwd bash bsdutils coreutils dash debconf \
-    debian-archive-keyring debian-ports-archive-keyring debianutils diffutils \
-    dpkg e2fsprogs fdisk findutils gcc-8-base gpgv grep gzip hostname \
-    init-system-helpers libacl1 libapt-pkg5.0 libattr1 libaudit-common \
-    libaudit1 libblkid1 libbz2-1.0 libc-bin libc6 libcap-ng0 libcom-err2 \
-    libdb5.3 libdebconfclient0 libext2fs2 libfdisk1 libffi7 libgcc1 libgcrypt20 \
-    libgmp10 libgnutls30 libgpg-error0 libhogweed4 libidn2-0 liblz4-1 liblzma5 \
-    libmount1 libncursesw5 libnettle6 libp11-kit0 libpam-modules \
-    libpam-modules-bin libpam-runtime libpam0g libpcre3 libselinux1 \
-    libsemanage-common libsemanage1 libsepol1 libsmartcols1 libss2 libstdc++6 \
-    libsystemd0 libtasn1-6 libtinfo5 libudev1 libunistring2 libuuid1 login mawk \
+    isc-dhcp-client adduser apt base-files base-passwd bash bsdutils \
+    coreutils dash debconf debian-archive-keyring debian-ports-archive-keyring \
+    debianutils diffutils dpkg e2fsprogs fdisk findutils gpgv grep gzip \
+    hostname init-system-helpers libbz2-1.0 libc-bin libc6 libffi7 libgcc1 \
+    libgmp10 libgnutls30 liblz4-1 liblzma5 libncursesw5 libstdc++6 login mawk \
     mount ncurses-base ncurses-bin passwd perl-base sed systemd tar \
     tzdata util-linux zlib1g nano wget busybox net-tools ifupdown \
-    iputils-ping ntp lynx whiptail dialog ca-certificates less \
+    iputils-ping ntp lynx dialog ca-certificates less \
     build-essential apt-utils openssh-server openssh-client \
     nfs-client sudo bash-completion tmux adduser acl socat git vim ethtool \
     texinfo python3-dev flex bison libexpat1-dev libncurses-dev gawk \
