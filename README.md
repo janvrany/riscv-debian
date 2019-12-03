@@ -130,7 +130,7 @@ Now take your SD card, insert it into *Unleashed* and hope for the best.
 
 You can connect to *Unleashed* serial console by using `screen`:
 ```
-sudo screen /dev/ttyUSBS1 115200
+sudo screen /dev/ttyUSB1 115200
 ```
 
 ## Run RISC-V Debian Image in QEMU
