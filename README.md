@@ -91,7 +91,7 @@ script.
 If you want to run RISC-V [Jenkins][11] build slave, run
 
 ```
-./debian-mk-gdb.sh debian.img /path/to/jenkins.id_rsa.pub
+./debian-mk-jenkins.sh debian.img /path/to/jenkins.id_rsa.pub
 ```
 
 You need to provide a path to *PUBLIC* SSH RSA key that Jenkins master would use
