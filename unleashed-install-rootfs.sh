@@ -41,6 +41,6 @@ echo "I: Use tmpfs for /tmp"
 echo "tmpfs   /tmp    tmpfs   defaults        0       0"  | sudo tee -a "${DST}/etc/fstab"
 
 echo "I: Setting hostname to 'unleashed'"
-echo "unleashed" | sudo tee -a "${DST}/etc/hostname"
+echo "unleashed" | sudo tee "${DST}/etc/hostname"
 
 umount_ROOT
