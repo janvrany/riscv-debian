@@ -14,13 +14,7 @@ ensure_ROOT "$1"
 # ensure_ROOT mount /proc, /sys, /dev/pts and /dev/shm in order to allow
 # for easy chroot. However,`mmdebstrap` requires destination directory to
 # be empty so umount them (if mounted)
-for fs in proc sys dev/pts dev/shm; do
-    if [ -d "${ROOT}/$fs" ]; then
-        if mount | grep $(realpath "${ROOT}/$fs") > /dev/null; then
-            sudo umount $(realpath "${ROOT}/$fs")
-        fi
-    fi
-done
+unbind_filesystems
 
 
 # mkfs.ext3 creates lost+found directory, but `mmdebstrap` requires
@@ -48,6 +42,8 @@ sudo mmdebstrap \
 
 printf "Package: *\nPin: release a=experimental\nPin-Priority: 5\n" | sudo tee "${ROOT}/etc/apt/preferences.d/experimental.pref"
 printf "deb http://deb.debian.org/debian-ports/ experimental main" | sudo tee "${ROOT}/etc/apt/sources.list.d/experimental.list"
+
+bind_filesystems
 
 sudo chroot "${ROOT}" /usr/bin/apt-get update
 sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
