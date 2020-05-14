@@ -5,18 +5,22 @@ usable GDB!
 
 ## Setting up host build environment
 
+**Disclaimer:** following recipe is (semi-regularly) tested on Debian Testing (Bullseye at the time of writing). Debian 10 (Buster) is known to work too - but see comment below! If you have some other Debian-based distro, e.g, Ubuntu, this recipe may or may not work! 
+
 * Add Debian Unstable (Sid) repositories to your system:
 
       printf "Package: *\nPin: release a=unstable\nPin-Priority: 10\n" | sudo tee /etc/apt/preferences.d/unstable.pref      
       printf "deb http://ftp.debian.org/debian unstable main\ndeb-src http://ftp.debian.org/debian unstable main\n" | sudo tee /etc/apt/sources.list.d/unstable.list
       apt-get update
 
-* Install QEMU and `mmdebstrap` (req'd to build root filesystem and run installed system):
+* Install QEMU and `mmdebstrap` and repository keys (req'd to build root filesystem and run installed system):
 
       sudo apt-get install mmdebstrap qemu-user-static qemu-system-misc binfmt-support debian-ports-archive-keyring gcc-riscv64-linux-gnu rsync
 
-*Note:* If you have some other Debian-based distro, e.g, Ubuntu, this recipe may
-or may not work! Tested only on Debian Buster.
+**For Debian 10 (Buster) users**: Debian 10 has old *debian-ports* repository keys (2018.12.27) which are no longer valid (at the time of writing - 2020-05-14). You need to [download][13] and install most recent version of package [debian-ports-archive-keyring][14]:
+
+    wget http://ftp.debian.org/debian/pool/main/d/debian-ports-archive-keyring/debian-ports-archive-keyring_2019.11.05_all.deb
+    sudo dpkg -i debian-ports-archive-keyring_2019.11.05_all.deb
 
 ## Checking out source code
 
@@ -174,4 +178,6 @@ sudo dpkg --clear-avail && sudo apt-get update
 [10]: https://sifive.cdn.prismic.io/sifive%2Ffa3a584a-a02f-4fda-b758-a2def05f49f9_hifive-unleashed-getting-started-guide-v1p1.pdf
 [11]: https://jenkins.io/
 [12]: https://wiki.jenkins.io/display/JENKINS/SSH+Slaves+plugin
+[13]: https://packages.debian.org/testing/all/debian-ports-archive-keyring/download
+[14]: https://packages.debian.org/testing/debian-ports-archive-keyring
 
