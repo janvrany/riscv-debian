@@ -55,7 +55,7 @@ sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
     mount ncurses-base ncurses-bin passwd perl-base sed systemd systemd-sysv tar \
     tzdata util-linux zlib1g nano wget busybox net-tools ifupdown \
     iputils-ping ntp lynx dialog ca-certificates less \
-    build-essential apt-utils dropbear openssh-client \
+    build-essential apt-utils openssh-server openssh-client \
     nfs-client sudo bash-completion tmux adduser acl socat git vim ethtool \
     texinfo python3-dev flex bison libexpat1-dev libncurses-dev gawk \
     libncurses5-dev libncursesw5-dev procps
