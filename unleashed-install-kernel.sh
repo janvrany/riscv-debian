@@ -28,3 +28,6 @@ echo "I: Copying kernel image, please wait..."
 sudo dd "if=$KERNEL_IMAGE_FOR_UNLEASHED" "of=${SDCARD_PARTITION_1}" bs=4096
 echo "I: Done"
 
+echo "I: Syncing..."
+sync
+echo "I: Done"

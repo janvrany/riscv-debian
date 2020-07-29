@@ -43,4 +43,8 @@ echo "tmpfs   /tmp    tmpfs   defaults        0       0"  | sudo tee -a "${DST}/
 echo "I: Setting hostname to 'unleashed'"
 echo "unleashed" | sudo tee "${DST}/etc/hostname"
 
+echo "I: Syncing..."
+sync
+echo "I: Done"
+
 umount_ROOT
