@@ -58,7 +58,7 @@ sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
     build-essential apt-utils openssh-server openssh-client \
     nfs-client sudo bash-completion tmux adduser acl socat git vim ethtool \
     texinfo python3-dev flex bison libexpat1-dev libncurses-dev gawk \
-    libncurses5-dev libncursesw5-dev procps
+    libncurses5-dev libncursesw5-dev procps udev locales zip unzip
 
 # Following are needed for OMR / OpenJ9
 sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
