@@ -94,8 +94,21 @@ iface eth0 inet dhcp
 EOF
 "
 
+# HiFive Unleashed, one of the tty's are denoted as console
+# (/dev/console) using console= kernel parameter. Therefore we have
+# to disable getty on the original device otherwise 2 gettys would
+# be started, pointing to the same device (albeit under different names
+# in /dev) and compete over. This would make the console unusable.
+#
+# Note, that the list below is valid for 5.0 and 5.6 kernels, when upgrading
+# to a newer version, more may need to be added.
+#
 sudo chroot "${ROOT}" systemctl mask serial-getty@ttyS0.service
 sudo chroot "${ROOT}" systemctl mask serial-getty@hvc0.service
+sudo chroot "${ROOT}" systemctl mask serial-getty@ttySIF0.service
+sudo chroot "${ROOT}" systemctl mask serial-getty@tty0.service
+
+# And enable the only /dev/console.
 sudo chroot "${ROOT}" systemctl unmask console-getty.service
 sudo chroot "${ROOT}" systemctl enable console-getty.service
 
