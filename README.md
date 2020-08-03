@@ -5,11 +5,32 @@ usable GDB!
 
 ## Setting up host build environment
 
-**Disclaimer:** following recipe is (semi-regularly) tested on Debian Testing (Bullseye at the time of writing). Debian 10 (Buster) is known to work too - but see comment below! If you have some other Debian-based distro, e.g, Ubuntu, this recipe may or may not work! 
+**Disclaimer:** following recipe is (semi-regularly) tested on Debian Testing (Bullseye at the time of writing). Debian 10 (Buster) is known to work too - but see comment below! If you have some other Debian-based distro, e.g, Ubuntu, this recipe may or may not work!
+
+* Compile and install RISC-V GNU toolchain. See [RISC-V GNU toolchain README][15] on how to do so - in short following should do it:
+
+      sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
+      git clone https://github.com/riscv/riscv-gnu-toolchain
+      cd riscv-gnu-toolchain
+      git submodule update --init --recursive
+      ./configure --prefix=/opt/riscv --enable-linux
+      make linux
+
+  This toolchain is needed to compile the kernel. As of 2020-07-27, the Debian-provided RISC-V cross toolchain is not able to link Linux kernel and fails with link error.
+
+* (Optional) Install recent QEMU:
+
+      https://git.qemu.org/git/qemu.git
+      cd qemu
+      ./configure --target-list=riscv64-linux-user,riscv64-softmmu --prefix=/opt/riscv
+      make
+      make install
+
+  This QEMU is needed to run installed Debian in QEMU. As of 2020-07-27, the Debian-provided QEMU hangs in early initialization.
 
 * Add Debian Unstable (Sid) repositories to your system:
 
-      printf "Package: *\nPin: release a=unstable\nPin-Priority: 10\n" | sudo tee /etc/apt/preferences.d/unstable.pref      
+      printf "Package: *\nPin: release a=unstable\nPin-Priority: 10\n" | sudo tee /etc/apt/preferences.d/unstable.pref
       printf "deb http://ftp.debian.org/debian unstable main\ndeb-src http://ftp.debian.org/debian unstable main\n" | sudo tee /etc/apt/sources.list.d/unstable.list
       apt-get update
 
@@ -106,8 +127,8 @@ the corresponding key.
 
 ### 5. Creating SD Card for HiFive Unleashed (optional)
 
-Following steps assumes the SD card (say `/dev/mmcblk0`) is properly partioned. 
-If not, please follow steps at the bottom of in [freedom-u-sdk/Makefile][5]. 
+Following steps assumes the SD card (say `/dev/mmcblk0`) is properly partioned.
+If not, please follow steps at the bottom of in [freedom-u-sdk/Makefile][5].
 In short:
 
 ```
@@ -180,4 +201,4 @@ sudo dpkg --clear-avail && sudo apt-get update
 [12]: https://wiki.jenkins.io/display/JENKINS/SSH+Slaves+plugin
 [13]: https://packages.debian.org/testing/all/debian-ports-archive-keyring/download
 [14]: https://packages.debian.org/testing/debian-ports-archive-keyring
-
+[15]: https://github.com/riscv/riscv-gnu-toolchain/blob/master/README.md

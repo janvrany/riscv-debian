@@ -4,13 +4,27 @@ set -e
 
 . $(dirname $0)/support.inc
 
-if [ -z "$1" ]; then    
+if [ -z "$1" ]; then
     echo "usage: $(basename $0) <DEBIAN_IMAGE>"
+    echo "       QEMU=/path/to/qemu-system-riscv64 $(basename $0) <DEBIAN_IMAGE>"
     exit 1
 fi
 
 DEBIAN_IMAGE=$1
-QEMU=$(which qemu-system-riscv64)
+if [ -z "$QEMU" ]; then
+    QEMU=/opt/riscv/bin/qemu-system-riscv64
+    if [ ! -f "$QEMU" ]; then
+        QEMU=$(which qemu-system-riscv64)
+        if [ -f "$QEMU" ]; then
+            echo "W: Using system QEMU, may hang. Please check README.md"
+        fi
+    fi
+fi
+
+if [ ! -f "$QEMU" ]; then
+    echo "E: Invalid QEMU (no such file): $QEMU"
+    exit 1
+fi
 
 if [ ! \( -b "$DEBIAN_IMAGE" -o -f "$DEBIAN_IMAGE" \) ]; then
     echo "E: Invalid DEBIAN_IMAGE (not a block device or file): $DEBIAN_IMAGE"
@@ -19,7 +33,7 @@ fi
 
 if [ ! -f "$KERNEL_IMAGE" ]; then
     echo "E: Invalid KERNEL_IMAGE (no such file): $KERNEL_IMAGE"
-    echo 
+    echo
     echo "I: Did you forgot to run 'debian-mk-kernel.mk' script?"
     exit 2
 fi

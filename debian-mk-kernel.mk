@@ -2,23 +2,24 @@
 
 ROOT := $(shell pwd)
 
+KERNEL_IMAGE=riscv-linux/vmlinux
+CROSS_COMPILE ?= /opt/riscv/bin/riscv64-unknown-linux-gnu-
+
 .PHONY: all
 all:  bbl-q bbl-u
 	@echo "To install linux kernel image to SD card, execute:"
-	@echo 
+	@echo
 	@echo "    sudo dd if=$(ROOT)/bbl-u of=/dev/ABCD bs=4096"
-	@echo 
+	@echo
 
-riscv-linux/vmlinux: riscv-linux/.config riscv-linux/Makefile riscv-linux
+$(KERNEL_IMAGE): riscv-linux/.config riscv-linux/Makefile riscv-linux
 	$(MAKE) -C riscv-linux ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- vmlinux
 
 riscv-linux/.config: riscv-linux-config.txt riscv-linux/Makefile
-	#$(MAKE) -C riscv-linux ARCH=riscv defconfig
-	#cat $< >> $@
 	cp $< $@
 	$(MAKE) -C riscv-linux ARCH=riscv olddefconfig
 
-bbl-q: riscv-linux/vmlinux	
+bbl-q: $(KERNEL_IMAGE)
 	rm -f $@
 	rm -rf riscv-pk/build
 	mkdir -p riscv-pk/build
@@ -30,7 +31,7 @@ bbl-q: riscv-linux/vmlinux
 	    --enable-logo
 	cd riscv-pk/build && \
 	$(MAKE)
-	cp riscv-pk/build/bbl $@	
+	cp riscv-pk/build/bbl $@
 
-bbl-u: bbl-q	
-	riscv64-linux-gnu-objcopy -S -O binary --change-addresses -0x80000000 $< $@
+bbl-u: bbl-q
+	$(CROSS_COMPILE)objcopy -S -O binary --change-addresses -0x80000000 $< $@
