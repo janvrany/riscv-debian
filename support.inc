@@ -1,6 +1,8 @@
+OPENSBI_IMAGE=opensbi/build/platform/qemu/virt/firmware/fw_jump.bin
+OPENSBI_IMAGE_FOR_UNLEASHED=opensbi/build/platform/sifive/fu540/firmware/fw_payload.bin
 
-KERNEL_IMAGE="$(dirname $0)/bbl-q"
-KERNEL_IMAGE_FOR_UNLEASHED="$(dirname $0)/bbl-u"
+KERNEL_IMAGE="riscv-linux/arch/riscv/boot/Image"
+KERNEL_IMAGE_FOR_UNLEASHED="riscv-linux/arch/riscv/boot/Image"
 
 function confirm ()  {
   echo  -n "$1 [y/n/Ctrl-C]? "

@@ -35,7 +35,9 @@ A set of scripts to build a working Debian image for RISC-V. This includes usabl
 
 * Install QEMU and `mmdebstrap` and repository keys (req'd to build root filesystem and run installed system):
 
-      sudo apt-get install mmdebstrap qemu-user-static qemu-system-misc binfmt-support debian-ports-archive-keyring gcc-riscv64-linux-gnu rsync
+      sudo apt-get install mmdebstrap qemu-user-static qemu-system-misc binfmt-support debian-ports-archive-keyring gcc-riscv64-linux-gnu rsync device-tree-compiler
+
+
 
 **For Debian 10 (Buster) users**: Debian 10 has old *debian-ports* repository keys (2018.12.27) which are no longer valid (at the time of writing - 2020-05-14). You need to [download][13] and install most recent version of package [debian-ports-archive-keyring][14]:
 
@@ -66,9 +68,12 @@ They're provided for convenience. Use at your own risk.
   ./debian-mk-kernel.mk
   ```
 
-  This will leave QEMU bootable kernel image (BBL + kernel image) in `bbl-q`.
-  The image for *HiFive Unleashed* is `bbl-u`, *QEMU image simply won't boot*
-  !!!
+  This compiles OpenSBI with Linux kernel as payload for booting on HiFive Unleashed.
+  The bootable image is:
+
+  ```
+  opensbi/build/platform/sifive/fu540/firmware/fw_payload.bin
+  ```
 
 ### 2. Building Debian filesystem image
 
@@ -157,6 +162,8 @@ sudo screen /dev/ttyUSB1 115200
 ```
 
 ## Run RISC-V Debian Image in QEMU
+
+
 
 ```
 ./qemu-fire.sh

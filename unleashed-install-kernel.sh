@@ -4,7 +4,7 @@ set -e
 
 . $(dirname $0)/support.inc
 
-if [ -z "$1" ]; then    
+if [ -z "$1" ]; then
     echo "usage: $(basename $0) <SDCARD_PARTITION_1>"
     exit 1
 elif [ ! -b "$1" ]; then
@@ -13,9 +13,9 @@ elif [ ! -b "$1" ]; then
 fi
 SDCARD_PARTITION_1=$1
 
-if [ ! -f "$KERNEL_IMAGE_FOR_UNLEASHED" ]; then
-    echo "E: Invalid KERNEL_IMAGE_FOR_UNLEASHED (no such file): $KERNEL_IMAGE_FOR_UNLEASHED"
-    echo 
+if [ ! -f "$OPENSBI_IMAGE_FOR_UNLEASHED" ]; then
+    echo "E: Invalid OPENSBI_IMAGE_FOR_UNLEASHED (no such file): $OPENSBI_IMAGE_FOR_UNLEASHED"
+    echo
     echo "I: Did you forgot to run 'debian-mk-kernel.mk' script?"
     exit 2
 fi
@@ -25,7 +25,7 @@ if ! confirm "Really install kernel to device $SDCARD_PARTITION_1"; then
 fi
 
 echo "I: Copying kernel image, please wait..."
-sudo dd "if=$KERNEL_IMAGE_FOR_UNLEASHED" "of=${SDCARD_PARTITION_1}" bs=4096
+sudo dd "if=$OPENSBI_IMAGE_FOR_UNLEASHED" "of=${SDCARD_PARTITION_1}" bs=4096
 echo "I: Done"
 
 echo "I: Syncing..."

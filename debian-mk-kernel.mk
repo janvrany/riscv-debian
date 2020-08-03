@@ -2,36 +2,32 @@
 
 ROOT := $(shell pwd)
 
-KERNEL_IMAGE=riscv-linux/vmlinux
+KERNEL_IMAGE=riscv-linux/arch/riscv/boot/Image
 CROSS_COMPILE ?= /opt/riscv/bin/riscv64-unknown-linux-gnu-
 
 .PHONY: all
-all:  bbl-q bbl-u
-	@echo "To install linux kernel image to SD card, execute:"
-	@echo
-	@echo "    sudo dd if=$(ROOT)/bbl-u of=/dev/ABCD bs=4096"
-	@echo
+all:  $(KERNEL_IMAGE) qemu fu540
 
 $(KERNEL_IMAGE): riscv-linux/.config riscv-linux/Makefile riscv-linux
-	$(MAKE) -C riscv-linux ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- vmlinux
+	$(MAKE) -C riscv-linux ARCH=riscv CROSS_COMPILE=$(CROSS_COMPILE) Image
+
+riscv-linux/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dtb: riscv-linux/.config riscv-linux/Makefile $(KERNEL_IMAGE)
+	$(MAKE) -C riscv-linux ARCH=riscv CROSS_COMPILE=$(CROSS_COMPILE) dtbs
 
 riscv-linux/.config: riscv-linux-config.txt riscv-linux/Makefile
 	cp $< $@
 	$(MAKE) -C riscv-linux ARCH=riscv olddefconfig
 
-bbl-q: $(KERNEL_IMAGE)
-	rm -f $@
-	rm -rf riscv-pk/build
-	mkdir -p riscv-pk/build
-	cd riscv-pk/build && \
-	../configure \
-	    --host=riscv64-linux-gnu \
-	    --enable-print-device-tree \
-	    --with-payload=$(ROOT)/$< \
-	    --enable-logo
-	cd riscv-pk/build && \
-	$(MAKE)
-	cp riscv-pk/build/bbl $@
+opensbi/build/platform/qemu/virt/firmware/fw_jump.bin:
+	CROSS_COMPILE=$(CROSS_COMPILE) $(MAKE) -C opensbi \
+		PLATFORM=qemu/virt
 
-bbl-u: bbl-q
-	$(CROSS_COMPILE)objcopy -S -O binary --change-addresses -0x80000000 $< $@
+qemu: opensbi/build/platform/qemu/virt/firmware/fw_jump.bin
+
+opensbi/build/platform/sifive/fu540/firmware/fw_payload.bin: $(KERNEL_IMAGE) riscv-linux/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dtb
+	CROSS_COMPILE=$(CROSS_COMPILE) $(MAKE) -C opensbi \
+		PLATFORM=sifive/fu540 \
+		FW_PAYLOAD_FDT_PATH=../riscv-linux/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dtb \
+		FW_PAYLOAD_PATH=../$<
+
+fu540: opensbi/build/platform/sifive/fu540/firmware/fw_payload.bin

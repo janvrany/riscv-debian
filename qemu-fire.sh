@@ -38,6 +38,13 @@ if [ ! -f "$KERNEL_IMAGE" ]; then
     exit 2
 fi
 
+if [ ! -f "$OPENSBI_IMAGE" ]; then
+    echo "E: Invalid OPENSBI_IMAGE (no such file): $OPENSBI_IMAGE"
+    echo
+    echo "I: Did you forgot to run 'debian-mk-kernel.mk' script?"
+    exit 2
+fi
+
 echo "To (SSH) connect to running Debian, do"
 echo
 echo "    ssh localhost -p 5555"
@@ -54,7 +61,10 @@ fi
 
 ${QEMU} -nographic -machine virt \
     -m 2G \
-    -kernel "$KERNEL_IMAGE" -append "earlyprintk rw root=/dev/vda" \
+    -smp cpus=4 \
+    -bios "$OPENSBI_IMAGE" \
+    -kernel "$KERNEL_IMAGE" \
+    -append "root=/dev/vda rw console=ttyS0" \
     -drive file=${DEBIAN_IMAGE},format=raw,id=hd0 -device virtio-blk-device,drive=hd0 \
     -netdev user,id=net0,hostfwd=tcp::5555-:22,hostfwd=tcp::7000-:7000 -device virtio-net-device,netdev=net0
 

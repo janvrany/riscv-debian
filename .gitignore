@@ -1,4 +1,3 @@
 debian.img
 debian
-bbl-q
-bbl-u
+opensbi/build
