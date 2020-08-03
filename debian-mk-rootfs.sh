@@ -65,7 +65,7 @@ sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
     cmake \
     libdwarf-dev libelf-dev \
     libx11-dev libxext-dev libxrender-dev libxrandr-dev libxtst-dev libxt-dev \
-    libasound2-dev
+    libasound2-dev default-jdk libcups2-dev libfontconfig1-dev ccache
 
 sudo chroot "${ROOT}" dpkg --configure -a
 
