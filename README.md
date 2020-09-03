@@ -1,7 +1,6 @@
 # Debian on RISC-V
 
-A set of scripts to build a working Debian image for RISC-V. This  includes
-usable GDB!
+A set of scripts to build a working Debian image for RISC-V. This includes usable GDB!
 
 ## Setting up host build environment
 
@@ -98,9 +97,8 @@ They're provided for convenience. Use at your own risk.
 
 ### 3. Install GDB (optional)
 
-You may want to install GDB in order to debug programs. At the time of writing,
-the stock GDB had problems. To install GDB that is known to work, run
-
+You may want to install GDB in order to debug programs. To install GDB that, 
+run
 
 ```
 ./debian-mk-gdb.sh debian.img

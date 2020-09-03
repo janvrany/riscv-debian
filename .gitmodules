@@ -2,10 +2,6 @@
 	path = riscv-linux
 	url = https://github.com/janvrany/riscv-linux.git
 	branch = users/jv/riscv-linux-5.0-rc1
-[submodule "binutils-gdb"]
-	path = binutils-gdb
-	url = https://bitbucket.org/janvrany/binutils-gdb.git
-	branch = users/jv/vdb
 [submodule "riscv-pk"]
 	path = riscv-pk
 	url = https://github.com/riscv/riscv-pk.git
