@@ -42,6 +42,12 @@ echo "To (SSH) connect to running Debian, do"
 echo
 echo "    ssh localhost -p 5555"
 echo
+echo "Local port 7000 is forwarded to running Debian, port 7000,"
+echo "you may use this for example for remote debugging using"
+echo "gdbserver:"
+echo 
+echo "    (gdb) target remote localhost:7000"
+echo 
 if ! confirm "Continue"; then
     exit 0
 fi
@@ -50,5 +56,5 @@ ${QEMU} -nographic -machine virt \
     -m 2G \
     -kernel "$KERNEL_IMAGE" -append "earlyprintk rw root=/dev/vda" \
     -drive file=${DEBIAN_IMAGE},format=raw,id=hd0 -device virtio-blk-device,drive=hd0 \
-    -netdev user,id=net0,hostfwd=tcp::5555-:22 -device virtio-net-device,netdev=net0
+    -netdev user,id=net0,hostfwd=tcp::5555-:22,hostfwd=tcp::7000-:7000 -device virtio-net-device,netdev=net0
 
