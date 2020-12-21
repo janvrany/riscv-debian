@@ -6,9 +6,10 @@ A set of scripts to build a working Debian image for RISC-V. This includes usabl
 
 **Disclaimer:** following recipe is (semi-regularly) tested on Debian Testing (Bullseye at the time of writing). Debian 10 (Buster) is known to work too - but see comment below! If you have some other Debian-based distro, e.g, Ubuntu, this recipe may or may not work!
 
-* Compile and install RISC-V GNU toolchain. See [RISC-V GNU toolchain README][15] on how to do so - in short following should do it:
+* Compile and install RISC-V GNU toolchain. See [RISC-V GNU toolchain README][15] on how to do so - in short following should do
+  it, but ensure that the `--prefix` location is writable by the user you run `make linux` as
 
-      sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
+      sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev git
       git clone https://github.com/riscv/riscv-gnu-toolchain
       cd riscv-gnu-toolchain
       git submodule update --init --recursive
@@ -19,7 +20,8 @@ A set of scripts to build a working Debian image for RISC-V. This includes usabl
 
 * (Optional) Install recent QEMU:
 
-      https://git.qemu.org/git/qemu.git
+      sudo apt-get install ninja-build pkg-config libglib2.0-dev libpixman-1-dev
+      git clone https://git.qemu.org/git/qemu.git
       cd qemu
       ./configure --target-list=riscv64-linux-user,riscv64-softmmu --prefix=/opt/riscv
       make
@@ -31,7 +33,7 @@ A set of scripts to build a working Debian image for RISC-V. This includes usabl
 
       printf "Package: *\nPin: release a=unstable\nPin-Priority: 10\n" | sudo tee /etc/apt/preferences.d/unstable.pref
       printf "deb http://ftp.debian.org/debian unstable main\ndeb-src http://ftp.debian.org/debian unstable main\n" | sudo tee /etc/apt/sources.list.d/unstable.list
-      apt-get update
+      sudo apt-get update
 
 * Install QEMU and `mmdebstrap` and repository keys (req'd to build root filesystem and run installed system):
 
@@ -41,8 +43,8 @@ A set of scripts to build a working Debian image for RISC-V. This includes usabl
 
 **For Debian 10 (Buster) users**: Debian 10 has old *debian-ports* repository keys (2018.12.27) which are no longer valid (at the time of writing - 2020-05-14). You need to [download][13] and install most recent version of package [debian-ports-archive-keyring][14]:
 
-    wget http://ftp.debian.org/debian/pool/main/d/debian-ports-archive-keyring/debian-ports-archive-keyring_2019.11.05_all.deb
-    sudo dpkg -i debian-ports-archive-keyring_2019.11.05_all.deb
+    wget http://ftp.debian.org/debian/pool/main/d/debian-ports-archive-keyring/debian-ports-archive-keyring_2020.02.02_all.deb
+    sudo dpkg -i debian-ports-archive-keyring_2020.02.02_all.deb
 
 ## Checking out source code
 
@@ -62,7 +64,7 @@ They're provided for convenience. Use at your own risk.
 
 ### 1. Building Linux kernel image
 
-* Run:
+* Run the script in this repository:
 
   ```
   ./debian-mk-kernel.mk
@@ -92,7 +94,7 @@ They're provided for convenience. Use at your own risk.
 * Install Debian into that image:
 
   ```
-  ./debian-mk-rootfs.sh debian.img
+  bash ./debian-mk-rootfs.sh debian.img
 
   ```
 
