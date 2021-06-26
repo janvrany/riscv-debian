@@ -4,5 +4,5 @@
 	branch = users/jv/riscv-linux-5.6.12
 [submodule "opensbi"]
 	path = opensbi
-	url = https://github.com/janvrany/opensbi.git
-	branch = users/jv/v0.6
+	url = https://github.com/riscv/opensbi.git
+	branch = v0.6

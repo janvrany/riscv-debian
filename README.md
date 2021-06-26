@@ -168,7 +168,7 @@ sudo screen /dev/ttyUSB1 115200
 
 
 ```
-./qemu-fire.sh
+./qemu-fire.sh debian.img
 ```
 
 ## Other comments
