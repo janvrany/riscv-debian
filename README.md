@@ -174,6 +174,10 @@ fixed this for me:
 sudo dpkg --clear-avail && sudo apt-get update
 ```
 
+## License
+
+This code is licensed under MIT license. See `LICENSE.txt`.
+
 ## References
 * [https://wiki.debian.org/RISC-V][1]
 * [https://github.com/jim-wilson/riscv-linux-native-gdb/blob/jimw-riscv-linux-gdb/README.md][2]
