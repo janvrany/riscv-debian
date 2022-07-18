@@ -19,7 +19,7 @@ A set of scripts to build a working Debian image for RISC-V. This includes usabl
 
 * (Optional) Install recent QEMU:
 
-      https://git.qemu.org/git/qemu.git
+      git clone --recursive https://git.qemu.org/git/qemu.git
       cd qemu
       ./configure --target-list=riscv64-linux-user,riscv64-softmmu --prefix=/opt/riscv
       make
