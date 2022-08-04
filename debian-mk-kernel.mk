@@ -4,6 +4,8 @@ ROOT := $(shell pwd)
 
 KERNEL_IMAGE=riscv-linux/vmlinux
 CROSS_COMPILE ?= /opt/riscv/bin/riscv64-unknown-linux-gnu-
+_CROSS_COMPILE=$(CROSS_COMPILE:-=)
+PREFIX=`basename ${_CROSS_COMPILE}`
 
 .PHONY: all
 all:  bbl-q bbl-u
@@ -25,7 +27,7 @@ bbl-q: $(KERNEL_IMAGE)
 	mkdir -p riscv-pk/build
 	cd riscv-pk/build && \
 	../configure \
-	    --host=riscv64-linux-gnu \
+	    --host=${PREFIX} \
 	    --enable-print-device-tree \
 	    --with-payload=$(ROOT)/$< \
 	    --enable-logo
