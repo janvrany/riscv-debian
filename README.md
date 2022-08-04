@@ -32,7 +32,7 @@ A set of scripts to build a working Debian image for RISC-V. This includes usabl
 
       printf "Package: *\nPin: release a=unstable\nPin-Priority: 10\n" | sudo tee /etc/apt/preferences.d/unstable.pref
       printf "deb http://ftp.debian.org/debian unstable main\ndeb-src http://ftp.debian.org/debian unstable main\n" | sudo tee /etc/apt/sources.list.d/unstable.list
-      apt-get update
+      sudo apt-get update
 
 * Install QEMU and `mmdebstrap` and repository keys (req'd to build root filesystem and run installed system):
 
