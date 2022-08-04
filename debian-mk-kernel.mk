@@ -6,6 +6,8 @@ KERNEL_IMAGE=riscv-linux/vmlinux
 CROSS_COMPILE ?= /opt/riscv/bin/riscv64-unknown-linux-gnu-
 _CROSS_COMPILE=$(CROSS_COMPILE:-=)
 PREFIX=`basename ${_CROSS_COMPILE}`
+_CROSS_COMPILE_DIR=`dirname ${CROSS_COMPILE}`
+CROSS_COMPILE_DIR=$(shell echo ${_CROSS_COMPILE_DIR})
 
 .PHONY: all
 all:  bbl-q bbl-u
@@ -26,12 +28,14 @@ bbl-q: $(KERNEL_IMAGE)
 	rm -rf riscv-pk/build
 	mkdir -p riscv-pk/build
 	cd riscv-pk/build && \
+	PATH="$(CROSS_COMPILE_DIR):${PATH}" \
 	../configure \
 	    --host=${PREFIX} \
 	    --enable-print-device-tree \
 	    --with-payload=$(ROOT)/$< \
 	    --enable-logo
 	cd riscv-pk/build && \
+	PATH="$(CROSS_COMPILE_DIR):${PATH}" \
 	$(MAKE)
 	cp riscv-pk/build/bbl $@
 
