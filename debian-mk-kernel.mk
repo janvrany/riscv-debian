@@ -13,7 +13,7 @@ all:  bbl-q bbl-u
 	@echo
 
 $(KERNEL_IMAGE): riscv-linux/.config riscv-linux/Makefile riscv-linux
-	$(MAKE) -C riscv-linux ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- vmlinux
+	$(MAKE) -C riscv-linux ARCH=riscv vmlinux
 
 riscv-linux/.config: riscv-linux-config.txt riscv-linux/Makefile
 	cp $< $@
