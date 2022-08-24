@@ -4,8 +4,7 @@ ROOT := $(shell pwd)
 
 KERNEL_IMAGE=riscv-linux/vmlinux
 CROSS_COMPILE ?= /opt/riscv/bin/riscv64-unknown-linux-gnu-
-_CROSS_COMPILE=$(CROSS_COMPILE:-=)
-KERNEL_HOST=`basename ${_CROSS_COMPILE}`
+KERNEL_HOST=$(notdir $(CROSS_COMPILE:-=))
 CROSS_COMPILE_DIR=$(abspath $(dir $(CROSS_COMPILE)))
 
 .PHONY: all
