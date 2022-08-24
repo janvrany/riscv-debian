@@ -54,7 +54,8 @@ fi
 
 ${QEMU} -nographic -machine virt \
     -m 2G \
-    -kernel "$KERNEL_IMAGE" -append "earlyprintk rw root=/dev/vda" \
+    -bios none \
+    -kernel "$KERNEL_IMAGE" -append "earlyprintk=keep rw root=/dev/vda" \
     -drive file=${DEBIAN_IMAGE},format=raw,id=hd0 -device virtio-blk-device,drive=hd0 \
     -netdev user,id=net0,hostfwd=tcp::5555-:22,hostfwd=tcp::7000-:7000 -device virtio-net-device,netdev=net0
 
