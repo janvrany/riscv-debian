@@ -22,7 +22,7 @@ A set of scripts to build a working Debian image for RISC-V. This includes usabl
       sudo apt-get install git libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev ninja-build
       git clone --recursive https://git.qemu.org/git/qemu.git
       cd qemu
-      ./configure --target-list=riscv64-linux-user,riscv64-softmmu --prefix=/opt/riscv
+      ./configure --target-list=riscv64-softmmu --prefix=/opt/riscv
       make
       make install
 
@@ -32,7 +32,7 @@ A set of scripts to build a working Debian image for RISC-V. This includes usabl
 
       printf "Package: *\nPin: release a=unstable\nPin-Priority: 10\n" | sudo tee /etc/apt/preferences.d/unstable.pref
       printf "deb http://ftp.debian.org/debian unstable main\ndeb-src http://ftp.debian.org/debian unstable main\n" | sudo tee /etc/apt/sources.list.d/unstable.list
-      apt-get update
+      sudo apt-get update
 
 * Install QEMU and `mmdebstrap` and repository keys (req'd to build root filesystem and run installed system):
 
@@ -65,6 +65,11 @@ They're provided for convenience. Use at your own risk.
 
   ```
   ./debian-mk-kernel.mk
+  ```
+  by default, PATH to cross-compiler is set in debian-mk-kernel.mk (**/opt/riscv/bin/riscv64-unknown-linux-gnu-**)  
+  If your cross-compiler is different you may set your configuretion like this:
+  ```
+  CROSS_COMPILE=/your/path/riscv/toolchain/bin/riscv64-linux-gnu- ./debian-mk-kernel.mk
   ```
 
   This will leave QEMU bootable kernel image (BBL + kernel image) in `bbl-q`.
