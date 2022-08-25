@@ -50,7 +50,7 @@ sudo chroot "${ROOT}" /usr/bin/apt-get -y install \
     isc-dhcp-client adduser apt base-files base-passwd bash bsdutils \
     coreutils dash debconf debian-archive-keyring debian-ports-archive-keyring \
     debianutils diffutils dpkg e2fsprogs fdisk findutils gpgv grep gzip \
-    hostname init-system-helpers libbz2-1.0 libc-bin libc6 libffi7 libgcc1 \
+    hostname init-system-helpers libbz2-1.0 libc-bin libc6 libffi-dev libgcc1 \
     libgmp10 libgnutls30 liblz4-1 liblzma5 libncursesw5 libstdc++6 login mawk \
     mount ncurses-base ncurses-bin passwd perl-base sed systemd systemd-sysv tar \
     tzdata util-linux zlib1g nano wget busybox net-tools ifupdown \
